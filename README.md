@@ -1,38 +1,34 @@
-# create-svelte
+# torac-front
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+This project holds the software used in the olive refinment factory, being composed of a [Sveltekit](https://kit.svelte.dev/) + [TailwindCSS](https://tailwindcss.com/) for it's
+front-end and [Tauri](https://tauri.app/) to compile and bundle as a desktop and mobile application.
 
-## Creating a project
+## Setting-up your environment
 
-If you're seeing this, you've probably already done this step. Congrats!
+### Windows
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+You can just install these programs and follow [Tauri](https://tauri.app/)'s documentation for it's dependencies, once successfully installed you are set to go.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+1. [NodeJS](https://nodejs.org/en)
+2. [yarn](https://classic.yarnpkg.com/en/docs/install#debian-stable)
+3. [Tauri's prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites)
 
-## Developing
+### Linux
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+There are two routes with Linux: Either you follow the same steps from Windows, or use [nix](https://nixos.org/download/) and just run `nix develop`, or `nix-shell` if flakes are not enabled, to have an environment ready to go.
 
-```bash
-npm run dev
+## Running the project
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+The project has three main gateways:
 
-## Building
+1. `yarn dev`
+2. `yarn tauri dev`
+3. `yarn tauri build`
 
-To create a production version of your app:
+The first will just host the web application as a server to be served, you can then open it in your browser of choice.
 
-```bash
-npm run build
-```
+Now the second will also run the web application, but use tauri's web engine to display the page, this is the
+**preferred** method to develop the application.
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+For the latter as it implies, this compiles it into a binary or package to be used in a live system, this is done for
+testing purposes or for an actual release build.
