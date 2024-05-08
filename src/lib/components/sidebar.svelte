@@ -1,10 +1,10 @@
 <script lang="ts">
-import type { BasicRouteData } from '../types/BasicRouteData'
+import type { BasicRouteData } from '$lib/types'
 
 export let sidebarOpen = false
 export let routes: BasicRouteData[] = []
 
-const sidebarBaseClasses = 'absolute bg-primary h-dvh top-0 w-40 pr-6 pl-4'
+const sidebarBaseClasses = 'absolute bg-primary-800 h-dvh top-0 w-40 pr-6 pl-4'
 
 const changeSidebarState = () => {
   sidebarOpen = !sidebarOpen
@@ -17,10 +17,9 @@ const changeSidebarState = () => {
     flex
     items-center
     justify-center
-    bg-primary
+    bg-primary-800
     w-20
     h-14
-    text-onPrimary
     rounded-tr-lg
     rounded-br-lg
     left-40
@@ -39,7 +38,7 @@ const changeSidebarState = () => {
 
   {#each routes as page }
     <span aria-label={`${page.name} page`} class="flex flex-col text-onPrimary text-lg">
-      <button class="mt-6 p-1 rounded-full border-x border-secondary bg">
+      <button class="mt-6 p-1 rounded-full border-x border-secondary-400 bg">
         <a href={page.route} on:click={changeSidebarState}>
           { page.name }
         </a>

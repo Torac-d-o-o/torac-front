@@ -35,8 +35,6 @@ module.exports = {
     curly: ['error', 'multi-line'],
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
-    indent: 'off',
-
-    '@typescript-eslint/indent': ['error', 2]
+    indent: ['error', 2, { SwitchCase: 1, ignoredNodes: ['PropertyDefinition'] }]
   }
 }
