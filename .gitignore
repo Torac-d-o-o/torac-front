@@ -131,3 +131,6 @@ dist
 
 # Sveltekit cache directory
 .svelte-kit
+
+# Site bundle
+build

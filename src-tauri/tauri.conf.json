@@ -4,7 +4,8 @@
     "beforeBuildCommand": "yarn build",
     "beforeDevCommand": "yarn dev",
     "devPath": "http://localhost:5173",
-    "distDir": "../public"
+    "distDir": "../build",
+    "withGlobalTauri": false
   },
   "package": {
     "productName": "torac",
@@ -30,7 +31,7 @@
         "icons/icon.ico"
       ],
       "identifier": "com.torac.dev",
-      "longDescription": "",
+      "longDescription": "PLACEHOLDER",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
@@ -39,8 +40,11 @@
         "signingIdentity": null
       },
       "resources": [],
-      "shortDescription": "",
-      "targets": "all",
+      "shortDescription": "PLACEHOLDER",
+      "targets": [
+        "msi",
+        "deb"
+      ],
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
