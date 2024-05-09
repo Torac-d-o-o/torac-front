@@ -1,5 +1,5 @@
 <script lang="ts">
-import { AppRail, AppRailAnchor } from '@skeletonlabs/skeleton'
+import { AppRail, AppRailAnchor, LightSwitch } from '@skeletonlabs/skeleton'
 import { page } from '$app/stores'
 
 import type { BasicRouteData } from '$lib/types'
@@ -19,4 +19,10 @@ const checkCurrentPath = (route: string) => $page.url.pathname === route
       <span>{ page.name }</span>
     </AppRailAnchor>
   {/each}
+
+  <svelte:fragment slot="trail">
+    <span class="grid place-content-center place-items-center mb-4">
+      <LightSwitch />
+    </span>
+  </svelte:fragment>
 </AppRail>
