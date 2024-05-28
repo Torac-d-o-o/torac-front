@@ -4,6 +4,7 @@ import Sidebar from '$lib/components/sidebar.svelte'
 import HomeIcon from '$lib/components/icons/home.svelte'
 
 import type { BasicRouteData } from '$lib/types'
+  import Production from '$lib/components/icons/production.svelte'
 
 const routes: BasicRouteData[] = [
   {
@@ -11,6 +12,11 @@ const routes: BasicRouteData[] = [
     route: '/',
     icon: HomeIcon
   },
+  {
+    name: 'Production',
+    route: '/',
+    icon: Production
+  }
 ]
 </script>
 
