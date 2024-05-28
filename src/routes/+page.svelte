@@ -1,10 +1,10 @@
 <span>DASHBOARD PLACEHOLDER</span>
 
 <style>
-span {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+    span {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 </style>

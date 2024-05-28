@@ -39,5 +39,7 @@
 		"vite": "^5.0.3"
 	},
 	"type": "module",
-	"dependencies": {}
+	"dependencies": {
+		"@tauri-apps/api": "^1.5.6"
+	}
 }
