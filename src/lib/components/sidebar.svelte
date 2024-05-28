@@ -9,14 +9,14 @@ export let routes: BasicRouteData[] = []
 const checkCurrentPath = (route: string) => $page.url.pathname === route
 </script>
 
-<AppRail id="sidebar">
+<AppRail id="sidebar" class="w-32">
   {#each routes as page }
     <AppRailAnchor href={ page.route } selected={checkCurrentPath(page.route)}>
       <svelte:fragment slot="lead">
         <svelte:component this={page.icon} />
       </svelte:fragment>
 
-      <span>{ page.name }</span>
+      <span class="text-xl">{ page.name }</span>
     </AppRailAnchor>
   {/each}
 
