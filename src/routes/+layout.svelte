@@ -7,7 +7,7 @@ import type { BasicRouteData } from '$lib/types'
 import Production from '$lib/components/icons/production.svelte'
   import Statistic from '$lib/components/icons/statistic.svelte'
   import Reception from '$lib/components/icons/reception.svelte'
-  import Package from '$lib/components/icons/reception.svelte'
+  import Package from '$lib/components/icons/package.svelte'
 
 const routes: BasicRouteData[] = [
   {
@@ -17,22 +17,22 @@ const routes: BasicRouteData[] = [
   },
   {
     name: 'Production',
-    route: '/',
+    route: '/production',
     icon: Production
   },
   {
     name: 'Statistic',
-    route: '/',
+    route: '/statistic',
     icon: Statistic
   },
   {
     name: 'Reception',
-    route: '/',
+    route: '/reception',
     icon: Reception
   },
   {
     name: 'Oil Delivery',
-    route: '/',
+    route: '/oil_delivery',
     icon: Package
   }
 ]
