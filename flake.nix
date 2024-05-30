@@ -3,9 +3,9 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     utils.url = "github:numtide/flake-utils";
 
-    nixpkgs-mozilla = {
-      url = "github:mozilla/nixpkgs-mozilla";
-      flake = false;
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   outputs = { self, nixpkgs, utils, ... }@inputs:
@@ -13,7 +13,7 @@
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = with inputs; [ (import nixpkgs-mozilla) ];
+          overlays = with inputs; [ fenix.overlays.default ];
         };
 
         libraries = with pkgs; [
@@ -27,10 +27,15 @@
           webkitgtk
         ];
 
-        toolchain = (pkgs.rustChannelOf {
-          rustToolchain = ./src-tauri/rust-toolchain.toml;
-          sha256 = "sha256-opUgs6ckUQCyDxcB9Wy51pqhd0MPGHUVbwRKKPGiwZU=";
-        }).rust;
+        fenixRustPackages = (with pkgs.fenix; with stable; combine [
+          cargo
+          clippy
+          rust-analyzer
+          rust-src
+          rustc
+          rustfmt
+          targets.x86_64-pc-windows-msvc.stable.rust-std
+        ]);
 
         torac = pkgs.callPackage ./nix/torac.nix { };
       in
@@ -40,6 +45,7 @@
             [
               curl
               dbus
+              fenixRustPackages
               glib
               gtk3
               librsvg
@@ -50,7 +56,6 @@
               nsis
               openssl_3
               pkg-config
-              toolchain
               wget
               yarn
             ] ++ libraries;
