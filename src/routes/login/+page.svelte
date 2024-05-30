@@ -23,18 +23,20 @@
 
         const buttonId = event.submitter!.id
 
-        const response: string = await invoke(buttonId, { username, password })
+        const response: string = await invoke(`user_${buttonId}`, { username, password })
         disableInputs = false
 
         if (!response) {
-            formError = buttonId === 'login'
-                ? 'Invalid username or password.'
-                : `User '${username}' already exists.`
+            formError =
+                buttonId === 'login'
+                    ? 'Invalid username or password.'
+                    : `User '${username}' already exists.`
             return
         }
 
         // We set a cookie manually as the back-end does not have a login page to make a proper HTTP-Only cookie.
-        document.cookie = `token=${response};samesite=lax`
+        document.cookie = `token=${response}`
+        window.localStorage.setItem('username', username) // Set their username so we can re-use without querying.
         goto('/')
     }
 </script>
@@ -74,11 +76,7 @@
             >
                 Login
             </button>
-            <button
-                id="register"
-                class="btn variant-ghost w-32"
-                disabled={disableInputs}
-            >
+            <button id="register" class="btn variant-ghost w-32" disabled={disableInputs}>
                 Register
             </button>
         </div>
