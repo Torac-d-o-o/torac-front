@@ -35,8 +35,18 @@ pub fn order_register(data: OrderRegistration, token: &str) -> Option<String> {
 }
 
 #[tauri::command]
-pub fn get_orders(token: &str, username: &str) -> Option<String> {
-    match backend::get(&format!("order?token={}&workerName={}", token, username)) {
+pub fn get_orders(token: &str, status: Option<&str>, worker_name: Option<&str>) -> Option<String> {
+    let mut url = format!("order?token={}", token);
+    
+    // Add status to the query if provided
+    if let Some(status) = status {
+        url.push_str(&format!("&status={}", status));
+    }
+    if let Some(worker_name) = worker_name {
+        url.push_str(&format!("&workerName={}", worker_name))
+    }
+
+    match backend::get(&url) {
         Err(_) => None,
         Ok(response) => {
             if response.status().is_success() {

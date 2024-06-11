@@ -1,3 +1,5 @@
+<script lang="ts"></script>
+
 <span>DASHBOARD PLACEHOLDER</span>
 
 <style>

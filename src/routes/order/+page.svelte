@@ -5,21 +5,23 @@
     import type { PageData } from './$types'
     import type { Customer, Order } from '$lib/types'
 
-    export let data: PageData
+    //export let data: PageData
 
     const status = 'RECEIVED'
     const workerUsername = window.localStorage.getItem('username')
 
     let bottlesDescription: string
     let boxIds: string
-    let customerId: string
+    let customerId: string | number
     let oilFiltering: string
     let oilWaterSeparation: string
     let oliveAmount: number
 
     let customers: Customer[] | null = null
 
-    invoke('get_customers', { token: data.token }).then((data) => {
+    let token = "eyJhbGciOiJFZERTQSJ9.eyJ1c2VybmFtZSI6IlZpbmtvIiwicGFzc3dvcmQiOiJMaWdtYSIsImZsYWdzIjo4fQ.pu_0ulHSFflnkiwT09tHq2nIsViM8XYIqBsxe1hs-qKZ-qU-mVbjBdfNsgkNvQ-WxusKXGhy79MWdMRTVi2sCA"
+
+    invoke('get_customers', { token: token }).then((data) => {
         customers = JSON.parse(data as string)
         if (customers) customerId = customers[0].id
     })
@@ -36,7 +38,7 @@
             data: {
                 bottlesDescription,
                 boxIds: boxIds.split(/\s*,\s*/).map((id) => Number.parseInt(id)),
-                customerId: Number.parseInt(customerId),
+                customerId: Number.parseInt(customerId as string),
                 oilFiltering: oilFiltering === '1',
                 oilWaterSeparation: oilWaterSeparation === '1',
                 oliveAmount,
@@ -44,7 +46,7 @@
                 status,
                 workerUsername
             },
-            token: data.token
+            token: token
         })
         console.log(JSON.parse(response))
         if (!response) {
@@ -64,7 +66,7 @@
         drawerOpen = !drawerOpen
         orderList = JSON.parse(
             await invoke('get_orders', {
-                token: data.token,
+                token: token,
                 username: window.localStorage.getItem('username')
             })
         )
