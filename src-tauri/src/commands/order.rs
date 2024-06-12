@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::backend;
 
+use reqwest::Client;
+
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct OrderRegistration<'a> {
@@ -35,7 +37,28 @@ pub fn order_register(data: OrderRegistration, token: &str) -> Option<String> {
 }
 
 #[tauri::command]
+pub async fn update_order(order_id: u64, status: &str, token: &str) -> Result<(), String> {
+    // Define the URL for the PATCH request
+    let url = format!("http://localhost:3000/order/{}/status/{}?token={}", order_id, status, token);
+
+    // Send the PATCH request
+    let client = Client::new();
+    let response = match client.patch(&url).send().await {
+        Ok(resp) => resp,
+        Err(e) => return Err(format!("Request failed: {:?}", e)),
+    };
+
+    // Check the response status
+    if response.status().is_success() {
+        Ok(())
+    } else {
+        Err(format!("HTTP error: {}", response.status()))
+    }
+}
+
+#[tauri::command]
 pub fn get_orders(token: &str, status: Option<&str>, worker_name: Option<&str>) -> Option<String> {
+    println!("Message from Rust before formating get_orders:");
     let mut url = format!("order?token={}", token);
     
     // Add status to the query if provided

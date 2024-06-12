@@ -4,6 +4,7 @@
     import ReceiptIcon from '$lib/components/icons/receipt.svelte'
     import Sidebar from '$lib/components/sidebar.svelte'
     import GearIcon from '$lib/components/icons/gear.svelte'
+    import WaterIcon from '$lib/components/icons/water.svelte'
     import CustomerIcon from '$lib/components/icons/customer.svelte'
     import ScaleIcon from '$lib/components/icons/scale.svelte'
     import type { BasicRouteData } from '$lib/types'
@@ -24,6 +25,11 @@
             name: 'Cleaning',
             route: '/cleaning',
             icon: TreeBranch
+        },
+        {
+            name: 'Washing',
+            route: '/washing',
+            icon: WaterIcon
         },
         {
             name: 'Production',

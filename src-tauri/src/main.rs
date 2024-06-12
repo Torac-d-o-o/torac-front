@@ -10,8 +10,13 @@ fn main() {
             commands::user::user_login,
             commands::user::user_register,
             commands::order::order_register,
+            commands::order::update_order,
             commands::order::get_orders,
-            commands::customer::get_customers
+            commands::customer::get_customers,
+            commands::production::register_production,
+            commands::production::get_production,
+            commands::mixer::get_mixers,
+            commands::mixer::register_mixer
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

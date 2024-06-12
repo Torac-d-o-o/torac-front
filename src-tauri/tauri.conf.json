@@ -1,4 +1,9 @@
 {
+  "plugins": {
+    "log": {
+      "targets": ["stdout", "log", "webview"]
+    }
+  },
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
     "beforeBuildCommand": "yarn build",
