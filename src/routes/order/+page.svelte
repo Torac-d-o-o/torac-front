@@ -4,6 +4,7 @@
 
     import type { PageData } from './$types'
     import type { Customer, Order } from '$lib/types'
+    import { getCookieAttribute } from '$lib/utils/cookie_parser'
 
     //export let data: PageData
 
@@ -19,8 +20,8 @@
 
     let customers: Customer[] | null = null
 
-    let token = "eyJhbGciOiJFZERTQSJ9.eyJ1c2VybmFtZSI6IlZpbmtvIiwicGFzc3dvcmQiOiJMaWdtYSIsImZsYWdzIjo4fQ.j6kw2giRmlWJezLhjYMp9zugaSFlBdLLfJ7Fomw-ceEGQGbRrySD2BeHSSdmJ21HeiII1Qzq6QfJZBdyA667AQ"
-
+    const token = getCookieAttribute('token');
+    
     invoke('get_customers', { token: token }).then((data) => {
         customers = JSON.parse(data as string)
         if (customers) customerId = customers[0].id

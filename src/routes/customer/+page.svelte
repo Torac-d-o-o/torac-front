@@ -4,8 +4,13 @@
     import type { PageData } from './$types'
     import data from '../order/+page.svelte'
     import { onMount } from "svelte"
+    import { getCookieAttribute } from "$lib/utils/cookie_parser"
 
-    let token = "eyJhbGciOiJFZERTQSJ9.eyJ1c2VybmFtZSI6IlZpbmtvIiwicGFzc3dvcmQiOiJMaWdtYSIsImZsYWdzIjo4fQ.j6kw2giRmlWJezLhjYMp9zugaSFlBdLLfJ7Fomw-ceEGQGbRrySD2BeHSSdmJ21HeiII1Qzq6QfJZBdyA667AQ"
+
+    const token = getCookieAttribute('token');
+        onMount(() => {
+            console.log(token);
+    })
 
 </script>
 

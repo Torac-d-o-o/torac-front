@@ -3,8 +3,9 @@
     import { OrderStatus, type Order } from "$lib/types"
     import { onMount } from "svelte"
     import { formatDateTime } from "$lib/utils/date_formater"
+    import { getCookieAttribute } from "$lib/utils/cookie_parser"
 
-    let token = "eyJhbGciOiJFZERTQSJ9.eyJ1c2VybmFtZSI6IlZpbmtvIiwicGFzc3dvcmQiOiJMaWdtYSIsImZsYWdzIjo4fQ.j6kw2giRmlWJezLhjYMp9zugaSFlBdLLfJ7Fomw-ceEGQGbRrySD2BeHSSdmJ21HeiII1Qzq6QfJZBdyA667AQ"
+    const token = getCookieAttribute('token');
 
     let orders: Order[] | null = null
     let selectedOrderId: number | null = null

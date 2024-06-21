@@ -1,10 +1,12 @@
 <script lang="ts">
     import type { Order } from "$lib/types"
     import { ProductionStatus, type Production } from "$lib/types/Production"
+    import { getCookieAttribute } from "$lib/utils/cookie_parser"
     import { invoke } from "@tauri-apps/api"
     import { onMount } from "svelte"
-
-    let token: string = "eyJhbGciOiJFZERTQSJ9.eyJ1c2VybmFtZSI6IlZpbmtvIiwicGFzc3dvcmQiOiJMaWdtYSIsImZsYWdzIjo4fQ.j6kw2giRmlWJezLhjYMp9zugaSFlBdLLfJ7Fomw-ceEGQGbRrySD2BeHSSdmJ21HeiII1Qzq6QfJZBdyA667AQ"
+    
+    const token = getCookieAttribute('token');
+    
     let enteredAt: Date | null
     let exitedAt: Date | null
     let status: ProductionStatus = ProductionStatus.IN_PRODUCTION
