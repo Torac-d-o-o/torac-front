@@ -57,7 +57,7 @@ pub async fn update_order(order_id: u64, status: &str, token: &str) -> Result<()
 }
 
 #[tauri::command]
-pub fn get_orders(token: &str, status: Option<&str>, worker_name: Option<&str>) -> Option<String> {
+pub fn get_orders(token: &str, status: Option<&str>, worker_name: Option<&str>, customer_name: Option<&str>, customer_address: Option<&str>) -> Option<String> {
     println!("Message from Rust before formating get_orders:");
     let mut url = format!("order?token={}", token);
     
@@ -68,7 +68,14 @@ pub fn get_orders(token: &str, status: Option<&str>, worker_name: Option<&str>) 
     if let Some(worker_name) = worker_name {
         url.push_str(&format!("&workerName={}", worker_name))
     }
+    if let Some(customer_name) = customer_name {
+        url.push_str(&format!("&customerName={}", customer_name))
+    }
+    if let Some(customer_address) = customer_address {
+        url.push_str(&format!("&customerAddress={}", customer_address))
+    }
 
+    println!("URL SENT: {}", url);
     match backend::get(&url) {
         Err(_) => None,
         Ok(response) => {

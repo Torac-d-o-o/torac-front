@@ -13,6 +13,7 @@ fn main() {
             commands::order::update_order,
             commands::order::get_orders,
             commands::customer::get_customers,
+            commands::customer::customer_register,
             commands::production::register_production,
             commands::production::get_production,
             commands::mixer::get_mixers,
