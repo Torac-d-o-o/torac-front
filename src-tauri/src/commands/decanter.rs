@@ -4,32 +4,36 @@ use crate::backend;
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct MixerData {
-    pub id: Option<u64>,
-    pub entered_at: Option<u64>,
-    pub exited_at: Option<u64>,
-    pub approximated_pasta_weight: Option<f64>,
-    pub production_id: Option<u64>,
-    pub machine_id: Option<u64>,
-    pub mixer_status: Option<String>,
-    pub order_id: Option<u64>,
+pub struct DecanterRegister<'a>{
+    id: Option<u64>,
+    entered_at: u64,
+    exited_at: Option<u64>,
+    machine_id: Option<&'a str>,
+    production: u64,
+    mixer: &'a str
 }
 
 #[tauri::command]
-pub fn get_mixers(token: &str, data: MixerData) -> Option<String> {
-    let mut url = format!("mixer?token={}", token);
+pub fn get_decanter(token: &str, id: Option<u64>, entered_at: Option<u64>, exited_at: Option<u64>, machine_id: Option<&str>, production: Option<u64>, mixer: Option<&str>) -> Option<String> {
+    let mut url = format!("decanter?token={}", token);
 
-    if let Some(id) = data.id {
+    if let Some(id) = id {
         url.push_str(&format!("&id={}", id));
     }
-    if let Some(machine_id) = data.machine_id {
+    if let Some(machine_id) = machine_id {
         url.push_str(&format!("&machineId={}", machine_id));
     }
-    if let Some(production_id) = data.production_id {
-        url.push_str(&format!("&productionId={}", production_id));
+    if let Some(production) = production {
+        url.push_str(&format!("&production={}", production));
     }
-    if let Some(mixer_status) = &data.mixer_status {
-        url.push_str(&format!("&mixerStatus={}", mixer_status));
+    if let Some(mixer) = mixer {
+        url.push_str(&format!("&mixer={}", mixer));
+    }
+    if let Some(entered_at) = entered_at {
+        url.push_str(&format!("&enteredAt={}", entered_at));
+    }
+    if let Some(exited_at) = exited_at {
+        url.push_str(&format!("&exitedAt={}", exited_at));
     }
 
     println!("URL Get Mixer data: {}", url);
@@ -51,8 +55,8 @@ pub fn get_mixers(token: &str, data: MixerData) -> Option<String> {
 
 
 #[tauri::command]
-pub fn register_mixer(token: &str, data: MixerData) -> Option<String> {
-    match backend::post(&format!("mixer?token={}", token), &data) {
+pub fn register_decanter(token: &str, data: DecanterRegister) -> Option<String> {
+    match backend::post(&format!("decanter?token={}", token), &data) {
         Err(_) => None,
         Ok(response) => {
             if response.status().is_success() {

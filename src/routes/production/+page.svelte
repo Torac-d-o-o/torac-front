@@ -1,96 +1,69 @@
 <script lang="ts">
-    import { OrderStatus, type Order } from "$lib/types"
+    import { type Order } from "$lib/types"
     import type { Mixer } from "$lib/types/Mixer"
-    import type { Production } from "$lib/types/Production"
     import { getCookieAttribute } from "$lib/utils/cookie_parser"
     import { formatDateTime } from "$lib/utils/date_formater"
     import { invoke } from "@tauri-apps/api"
+    import { dataDir } from "@tauri-apps/api/path"
     import { onMount } from "svelte"
+    import MixerComponent from "./mixer_component.svelte"
+    import { mixerMachineId } from "$lib/stores/mixer_machine_id.store"
 
-    let selectedOrderId: number | null = null
-    let status: OrderStatus = OrderStatus.IN_WASHING
-    let orderInWashing: Order[]
+    
+    let ordersInWashing: Order[] | null = null
+    let selectedOrderId: number
+    let selectedMixerId: number
+    $: selectedMixerId = $mixerMachineId
+    let loadedMixers: Mixer[] | null = null
     
     const token = getCookieAttribute('token');
-    
-    let mixers: Mixer[] | null
-    let selectedMixerId: number | null = null
-    let selectedMixer: Mixer | null = null
-    let productionsOfSelectedOrder: Production[]
 
-    async function getWashingOrder() {
-        console.log("before invoke"); 
-        await invoke('get_orders', { token: token, status: status }).then((data) => {
-            orderInWashing = JSON.parse(data as string);
-            console.log("Orders in washing:", orderInWashing);
-        }).catch(err => console.error("Error fetching orders in cleaning:", err));
-    }
+    onMount(() => {
+        getOrdersInWashing()
+    })
 
-    async function getProductionFromOrderId(order: number) {
-        console.log("Selected order id:", order)
-        await invoke('get_production', { token: token, status: 'IN_PRODUCTION', order: order })
+    mixerMachineId.subscribe(value => {
+        console.log("mixerMachineId has changed in AnotherComponent:", value)
+        selectedMixerId = value
+    });
+
+    async function getOrdersInWashing() {
+        await invoke('get_orders', { token: token, status: 'IN_WASHING' })
         .then((data) => {
-            console.log("Data after get_production request", data)
-            productionsOfSelectedOrder = JSON.parse(data as string)
-        }).catch(err => console.error("Error fetching production from order ID:", err))
-        console.log("Productions from selected order id:", productionsOfSelectedOrder)
+            if (data) {
+                ordersInWashing = JSON.parse(data as string)
+            }
+        })
     }
 
     function selectOrder(orderId: number) {
         selectedOrderId = orderId
-        getProductionFromOrderId(orderId)
-    }
-
-    function selectMixer(mixerId: number) {
-        selectedMixerId = mixerId
-        console.log("Selected mixer: ", selectedMixerId)
-    }
-
-    function selectMixerFromFull(mixerId: number, mixer: Mixer) {
-        selectedMixerId = mixerId
-        console.log("Selected mixer: ", selectedMixerId)
-        selectedMixer = mixer
     }
 
     async function getMixers() {
-        await invoke('get_mixers', {token: token, data: {status: OrderStatus.IN_PRODUCTION} })
+        await invoke('get_mixers', {token: token})
         .then((data) => {
-            if (data !== null) orderInWashing = JSON.parse(data as string)
+            loadedMixers = JSON.parse(data as string)
         })
     }
 
     async function registerMixer() {
-        console.log(selectedMixerId)
-        console.log(selectedOrderId)
-        
-        if (selectedMixerId && selectedOrderId) {
-            await invoke('register_mixer', {
-                token: token,
-                data: {
-                    machineId: selectedMixerId,
-                    orderId: selectedOrderId,
-                    productionId: productionsOfSelectedOrder[0].id
-                }
-            }).then((data) => {
-                console.log(JSON.parse(data as string))
-                if (!data) {
-                    console.log("ERROR REGISTER MIXER");
-                }
-            })
-            .then(() => { getMixers() });
-        }
+        await invoke('register_mixer', { token: token, data: { }})
+        .then((data) => {
+            console.log(data)
+        })
     }
 
     async function sendToDecanter() {
-        
+        if (selectedMixerId) {
+            await invoke('register_decanter', { token: token, data: {  }})
+            .then((data) => {
+                if (data !== null) {
+                    console.log(data)
+                }
+            })
+        }
     }
-
-    onMount(() => {
-        console.log("Mounting");
-        getWashingOrder()
-        .then(() => {getMixers()})
-        console.log("after washing order");
-    })
 </script>
 
 
@@ -112,13 +85,13 @@
             </tr>
         </thead>
         <tbody>
-            {#if orderInWashing}
-                {#each orderInWashing as order}
-                    <tr on:click={() => selectOrder(order.id)} class="{selectedOrderId === order.id ? 'table-row-checked' : ''}">
+            {#if ordersInWashing !== null}
+                {#each ordersInWashing as order}
+                    <tr on:click={() => selectOrder(order.id)} class="{selectedOrderId===order.id ? 'table-row-checked' : ''}">
                         <td>{order.id}</td>
                         <td>{order.boxIds}</td>
                         <td>{order.oliveAmount}</td>
-                        <td>{order.receivedAt}</td>
+                        <td>{formatDateTime(order.receivedAt.toString())}</td>
                         <td>{order.oilFiltering}</td>
                         <td>{order.oilWaterSeparation}</td>
                         <td>{order.status}</td>
@@ -127,56 +100,22 @@
                 {/each}
             {:else}
                 <tr>
-                    <td colspan="8">Nothing there yet</td>
+                    <td colspan="8">No orders in washing</td>
                 </tr>
             {/if}
         </tbody>
     </table>
 </div>
 
-<div class="grid grid-cols-3 grid-rows-2 px-4">
-    {#if mixers != null }
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        {#each mixers.slice(0, 6) as mixer, index}
-            <!-- svelte-ignore a11y-no-static-element-interactions -->
-            <div on:click={() => selectMixerFromFull(mixer.id, mixer)} class="{selectedMixerId === mixer.id ? 'table-row-checked card hover:cursor-pointer' : 'card hover:cursor-pointer'}">
-                <header class="card-header">Mixer {mixer.machineId}</header>
-                <section class="p-4">
-                    <label class="label" for="">Mixer data ID: {mixer.id}</label>
-                    <label class="label" for="">Entered At: {mixer.enteredAt}</label>
-                    <label class="label" for="">Approximated Weight Inside: {mixer.approximatedPastaWeight}</label>
-                    <label class="label" for="">Production ID: {mixer.productionId}</label>
-                </section>
-                <footer class="card-footer">
-                    <button class="btn">More Details</button>
-                </footer>
-            </div>
-        {/each}
-        {#if mixers.length < 6}
-            <!-- svelte-ignore a11y-no-static-element-interactions -->
-            {#each Array.from({ length: 6 - mixers.length }, (_, i) => i) as i}
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={() => selectMixer(i)} class="{selectedMixerId === i ? 'table-row-checked card hover:cursor-pointer empty-mixer' : 'card hover:cursor-pointer empty-mixer'}">
-                    <header class="card-header">Empty Mixer</header>
-                    <section class="p-4">
-                        <label class="label" for="">No data available</label>
-                    </section>
-                </div>
-            {/each}
-        {/if}
-    {:else}
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        {#each Array.from({ length: 6 }, (_, i) => i + 1) as index}
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div on:click={() => selectMixer(index)} class="{selectedMixerId === index ? 'table-row-checked card hover:cursor-pointer empty-mixer' : 'card hover:cursor-pointer empty-mixer'}">
-                <header class="card-header">Empty Mixer</header>
-                <section class="p-4">
-                    <label class="label" for="">No data available</label>
-                </section>
-            </div>
-        {/each}
-    {/if}
+<div class="grid grid-cols-3 gap-4 pb-5 px-5 h-1/2">
+    <MixerComponent id=1></MixerComponent>
+    <MixerComponent id=2></MixerComponent>
+    <MixerComponent id=3></MixerComponent>
+    <MixerComponent id=4></MixerComponent>
+    <MixerComponent id=5></MixerComponent>
+    <MixerComponent id=6></MixerComponent>
 </div>
+
 
 <div class="flex place-content-center" on:submit={registerMixer}>
     <form action="" class="grid grid-cols-2 gap-8 place-self-center">
@@ -194,13 +133,3 @@
         </div>
     </form>
 </div>
-
-
-<style>
-    .empty-mixer {
-        border: 1px solid #ccc;
-        padding: 8px;
-        margin: 8px;
-        text-align: center;
-    }
-</style>

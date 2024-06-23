@@ -1,3 +1,5 @@
+import type { Customer } from './Customer'
+
 export enum OrderStatus {
     RECEIVED = 'RECEIVED',
     STORED_DIRTY = 'STORED_DIRTY',
@@ -20,4 +22,5 @@ export interface Order {
     oliveAmount: number
     receivedAt: Date
     status: OrderStatus
+    customer: Customer
 }

@@ -17,7 +17,9 @@ fn main() {
             commands::production::register_production,
             commands::production::get_production,
             commands::mixer::get_mixers,
-            commands::mixer::register_mixer
+            commands::mixer::register_mixer,
+            commands::decanter::register_decanter,
+            commands::decanter::get_decanter
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

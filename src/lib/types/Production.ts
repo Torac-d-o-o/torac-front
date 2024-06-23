@@ -1,3 +1,5 @@
+import type { Order } from './Order'
+
 export enum ProductionStatus {
     IN_PRODUCTION = 'IN_PRODUCTION',
     OUT_PRODUCTION = 'OUT_PRODUCTION'
@@ -11,5 +13,5 @@ export interface Production {
     controlPanelUser?: string,
     oliveWashingUser?: string,
     oilWaterSeparationUser?: string,
-    order: number
+    order: Order
 }

@@ -7,5 +7,5 @@ export const load: PageServerLoad = ({ cookies }) => {
 
     if (!token) redirect(307, '/login')
 
-    return {token}
+    return { token }
 }

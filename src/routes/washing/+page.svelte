@@ -2,22 +2,23 @@
     import type { Order } from "$lib/types"
     import { ProductionStatus, type Production } from "$lib/types/Production"
     import { getCookieAttribute } from "$lib/utils/cookie_parser"
+    import { formatDateTime } from "$lib/utils/date_formater"
     import { invoke } from "@tauri-apps/api"
     import { onMount } from "svelte"
     
     const token = getCookieAttribute('token');
     
-    let enteredAt: Date | null
-    let exitedAt: Date | null
+    let enteredAt: Date | null = null
+    let exitedAt: Date | null = null
     let status: ProductionStatus = ProductionStatus.IN_PRODUCTION
-    let controlPanelUser: string
-    let oliveWashingUser: string
-    let oilWaterSeparationUser: string
+    let controlPanelUser: string = ''
+    let oliveWashingUser: string = ''
+    let oilWaterSeparationUser: string = ''
     const workerUsername = window.localStorage.getItem('username')
     let formError: string | null = null
     let selectedOrderId: number
 
-    let stashedOrders: Order[]
+    let stashedOrders: Order[] | null = null
 
     $: inputClasses = formError ? 'input input-error' : 'input'
 
@@ -26,12 +27,6 @@
         .then((data) => {
             if (data !== null) {
                 stashedOrders = JSON.parse(data as string)
-            }
-        })
-        await invoke('get_orders', { token: token, status: 'STORED_DIRTY'})
-        .then((data) => {
-            if (data !== null) {
-                stashedOrders.push(JSON.parse(data as string))  
             }
         })
     }
@@ -81,7 +76,7 @@
     <table class="table table-hover table-interactive">
         <thead>
             <tr class="text-l my-2">
-                <th class="flex justify-center">Stashed Orders</th>
+                <th class="flex justify-center">Clean Stashed Orders</th>
             </tr>
             <tr>
                 <th>ID</th>
@@ -95,13 +90,13 @@
             </tr>
         </thead>
         <tbody>
-            {#if stashedOrders != null}
+            {#if stashedOrders !== null}
                 {#each stashedOrders as stashed_order}
                 <tr on:click={() => selectOrder(stashed_order.id)} class="{selectedOrderId===stashed_order.id ? 'table-row-checked' : ''}">
                     <td>{stashed_order.id}</td>
                     <td>{stashed_order.boxIds}</td>
                     <td>{stashed_order.oliveAmount}</td>
-                    <td>{stashed_order.receivedAt}</td>
+                    <td>{formatDateTime(stashed_order.receivedAt.toString())}</td>
                     <td>{stashed_order.oilFiltering}</td>
                     <td>{stashed_order.oilWaterSeparation}</td>
                     <td>{stashed_order.status}</td>
