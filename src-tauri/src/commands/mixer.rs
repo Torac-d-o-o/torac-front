@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::backend;
 
+use reqwest::Client;
+
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MixerData {
@@ -65,5 +67,24 @@ pub fn register_mixer(token: &str, data: MixerData) -> Option<String> {
                 None
             }
         }
+    }
+}
+
+#[tauri::command]
+pub async fn update_mixer(machine_id: u64, status: &str, token: &str) -> Result<(), String> {
+    let url = format!("http://localhost:3000/mixer/{}/status/{}?token={}", machine_id, status, token);
+
+    // Send the PATCH request
+    let client = Client::new();
+    let response = match client.patch(&url).send().await {
+        Ok(resp) => resp,
+        Err(e) => return Err(format!("Request failed: {:?}", e)),
+    };
+
+    // Check the response status
+    if response.status().is_success() {
+        Ok(())
+    } else {
+        Err(format!("HTTP error: {}", response.status()))
     }
 }

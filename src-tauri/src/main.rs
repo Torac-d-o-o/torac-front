@@ -18,6 +18,7 @@ fn main() {
             commands::production::get_production,
             commands::mixer::get_mixers,
             commands::mixer::register_mixer,
+            commands::mixer::update_mixer,
             commands::decanter::register_decanter,
             commands::decanter::get_decanter
         ])

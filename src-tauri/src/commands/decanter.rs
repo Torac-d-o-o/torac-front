@@ -6,7 +6,7 @@ use crate::backend;
 #[serde(rename_all = "camelCase")]
 pub struct DecanterRegister<'a>{
     id: Option<u64>,
-    entered_at: u64,
+    entered_at: Option<u64>,
     exited_at: Option<u64>,
     machine_id: Option<&'a str>,
     production: u64,

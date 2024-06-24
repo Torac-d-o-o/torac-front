@@ -37,15 +37,15 @@
             icon: GearIcon
         },
         {
+            name: 'Weighing',
+            route: '/weighing',
+            icon: ScaleIcon
+        },
+        {
             name: 'Customer',
             route: '/customer',
             icon: CustomerIcon
         },
-        {
-            name: 'Weighing',
-            route: '/',
-            icon: ScaleIcon
-        }
     ]
 </script>
 
