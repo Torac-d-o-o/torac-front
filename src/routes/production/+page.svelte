@@ -117,7 +117,7 @@
 </div>
 
 
-<div class="flex place-content-center" on:submit={registerMixer}>
+<div class="flex place-content-center">
     <form action="" class="grid grid-cols-2 gap-8 place-self-center">
         <div>
             <label class="label" for="">Selected Order ID:</label>
