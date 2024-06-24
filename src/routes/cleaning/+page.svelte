@@ -24,10 +24,10 @@
         }).catch(err => console.error("Error fetching orders in cleaning:", err));
     }
 
-    async function updateOrder(status: OrderStatus) {
-        if (selectedOrderId !== null) {
+    async function updateOrder(status: OrderStatus, orderId?: number) {
+        if (selectedOrderId !== null || orderId !== null) {
             console.log(`Updating order ${selectedOrderId} to status ${status}`);
-            await invoke('update_order', { orderId: selectedOrderId, status: status, token: token })
+            await invoke('update_order', { orderId: selectedOrderId || orderId, status: status, token: token })
                 .then(() => {
                     console.log("Order updated successfully");
                     getOrders();
@@ -76,6 +76,11 @@
                     <td>{single_order.oilWaterSeparation}</td>
                     <td>{single_order.status}</td>
                     <td>{single_order.bottleDescription}</td>
+                    <td>
+                        <button on:click={() => updateOrder(OrderStatus.IN_PRODUCTION, single_order.id)}>
+                        End Washing Status
+                        </button>
+                    </td>
                 </tr>
                 {/each}
             {:else}
