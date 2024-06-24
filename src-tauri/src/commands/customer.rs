@@ -2,7 +2,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::backend;
 
-use reqwest::Client;
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
