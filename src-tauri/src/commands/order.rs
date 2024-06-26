@@ -39,7 +39,7 @@ pub fn order_register(data: OrderRegistration, token: &str) -> Option<String> {
 #[tauri::command]
 pub async fn update_order(order_id: u64, status: &str, token: &str) -> Result<(), String> {
     // Define the URL for the PATCH request
-    let url = format!("http://localhost:3000/order/{}/status/{}?token={}", order_id, status, token);
+    let url = format!("http://167.86.127.215:3000/order/{}/status/{}?token={}", order_id, status, token);
 
     // Send the PATCH request
     let client = Client::new();

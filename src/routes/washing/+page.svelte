@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Order } from "$lib/types"
+    import { OrderStatus, type Order } from "$lib/types"
     import { ProductionStatus, type Production } from "$lib/types/Production"
     import { getCookieAttribute } from "$lib/utils/cookie_parser"
     import { formatDateTime } from "$lib/utils/date_formater"
@@ -63,7 +63,7 @@
                 formError = 'Failed to register production.';
                 return;
             }
-            await invoke('update_order', { token: token, status: 'IN_PRODUCTION', orderId: selectedOrderId}).then(() => getStashedOrders())
+            await invoke('update_order', { token: token, status: OrderStatus.IN_WASHING, orderId: selectedOrderId}).then(() => getStashedOrders())
             console.log(JSON.parse(response));
         } catch (error) {
             console.error('Error registering production:', error);
@@ -115,32 +115,32 @@
     <form on:submit={handleSubmit} class="grid grid-cols-2 gap-8 place-self-center">
         <label class="label" for="enteredAt">
             <span>Entered At:</span>
-            <input type="datetime-local" id="enteredAt" bind:value={enteredAt} class={inputClasses} placeholder="Optional">
+            <input type="datetime-local" id="enteredAt" bind:value={enteredAt} class="input" placeholder="Optional">
         </label>
     
         <label class="label" for="exitedAt">
             <span>Exited At:</span>
-            <input type="datetime-local" id="exitedAt" bind:value={exitedAt} class={inputClasses} placeholder="Optional">
+            <input type="datetime-local" id="exitedAt" bind:value={exitedAt} class="input" placeholder="Optional">
         </label>    
     
         <label class="label" for="controlPanelUser">
             <span>Control Panel User:</span>
-            <input type="text" id="controlPanelUser" bind:value={controlPanelUser} class={inputClasses} placeholder="Optional">
+            <input type="text" id="controlPanelUser" bind:value={controlPanelUser} class="input" placeholder="Optional">
         </label>
     
         <label class="label" for="oliveWashingUser">
             <span>Olive Washing User:</span> 
-            <input type="text" id="oliveWashingUser" bind:value={oliveWashingUser} class={inputClasses} placeholder="Optional">
+            <input type="text" id="oliveWashingUser" bind:value={oliveWashingUser} class="input" placeholder="Optional">
         </label>
     
         <label class="label" for="oilWaterSeparationUser">
             <span>Oil Water Separation User:</span>
-            <input type="text" id="oilWaterSeparationUser" bind:value={oilWaterSeparationUser} class={inputClasses} placeholder="Optional">
+            <input type="text" id="oilWaterSeparationUser" bind:value={oilWaterSeparationUser} class="input" placeholder="Optional">
         </label>
     
         <label class="label" for="order">
             <span>Order:</span>
-            <input type="number" id="order" bind:value={selectedOrderId} class={inputClasses} placeholder="Select an order from the table">
+            <input type="number" id="order" bind:value={selectedOrderId} class="input" placeholder="Select an order from the table">
         </label>
     
         <button class="btn variant-ghost col-span-2 w-72 justify-self-center" type="submit"

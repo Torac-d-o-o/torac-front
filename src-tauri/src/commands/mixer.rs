@@ -72,7 +72,7 @@ pub fn register_mixer(token: &str, data: MixerData) -> Option<String> {
 
 #[tauri::command]
 pub async fn update_mixer(machine_id: u64, status: &str, token: &str) -> Result<(), String> {
-    let url = format!("http://localhost:3000/mixer/{}/status/{}?token={}", machine_id, status, token);
+    let url = format!("http://167.86.127.215:3000/mixer/{}/status/{}?token={}", machine_id, status, token);
 
     // Send the PATCH request
     let client = Client::new();

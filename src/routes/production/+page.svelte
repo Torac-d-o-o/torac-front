@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { MixerStatus, ProductionStatus, type Order, type Production } from "$lib/types"
+    import { MixerStatus, OrderStatus, ProductionStatus, type Order, type Production } from "$lib/types"
     import type { Mixer } from "$lib/types/Mixer"
     import { getCookieAttribute } from "$lib/utils/cookie_parser"
     import { formatDateTime } from "$lib/utils/date_formater"
@@ -33,6 +33,20 @@
             }
         } catch (error) {
             console.error("Error fetching orders in washing:", error);
+        }
+    }
+
+    async function updateOrder(status: OrderStatus, orderId?: number) {
+        if (selectedOrderId !== null || orderId !== null) {
+            console.log(`Updating order ${selectedOrderId} to status ${status}`);
+            await invoke('update_order', { orderId: selectedOrderId || orderId, status: status, token: token })
+                .then(() => {
+                    console.log("Order updated successfully");
+                    getOrdersInWashing()
+                })
+                .catch(err => console.error("Error updating order:", err));
+        } else {
+            console.warn("No order selected for update");
         }
     }
 
@@ -71,6 +85,11 @@
                         <td>{order.oilWaterSeparation}</td>
                         <td>{order.status}</td>
                         <td>{order.bottleDescription}</td>
+                        <td>
+                            <button type="button" class="btn variant-filled" on:click={() => updateOrder(OrderStatus.IN_MIXING, order.id)}>
+                            End Washing Status
+                            </button>
+                        </td>
                     </tr>
                 {/each}
             {:else}
