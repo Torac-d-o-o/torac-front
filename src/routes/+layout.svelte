@@ -46,6 +46,11 @@
             route: '/customer',
             icon: CustomerIcon
         },
+        {
+            name: 'Log In',
+            route: '/login',
+            icon: CustomerIcon
+        },
     ]
 </script>
 

@@ -35,7 +35,8 @@
         }
 
         // We set a cookie manually as the back-end does not have a login page to make a proper HTTP-Only cookie.
-        document.cookie = `token=${response}`
+        //document.cookie = `token=${response}`
+        window.localStorage.setItem('token', response)
         window.localStorage.setItem('username', username) // Set their username so we can re-use without querying.
         goto('/')
     }

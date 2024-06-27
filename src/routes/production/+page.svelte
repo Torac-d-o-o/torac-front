@@ -14,7 +14,7 @@
     let selectedMixerId: number;
     $: selectedMixerId = $mixerMachineId;
 
-    const token = getCookieAttribute('token');
+    const token = window.localStorage.getItem('token');
 
     onMount(async () => {
         await getOrdersInWashing();

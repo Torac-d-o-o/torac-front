@@ -20,7 +20,7 @@
 
     let customers: Customer[] | null = null
 
-    const token = getCookieAttribute('token');
+    const token = window.localStorage.getItem("token")
     
     invoke('get_customers', { token: token }).then((data) => {
         customers = JSON.parse(data as string)

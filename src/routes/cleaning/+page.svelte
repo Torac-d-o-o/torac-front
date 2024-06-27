@@ -5,7 +5,7 @@
     import { formatDateTime } from "$lib/utils/date_formater"
     import { getCookieAttribute } from "$lib/utils/cookie_parser"
 
-    const token = getCookieAttribute('token');
+    const token = window.localStorage.getItem('token')
 
     let orders: Order[] | null = null
     let selectedOrderId: number | null = null

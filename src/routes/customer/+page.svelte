@@ -17,8 +17,7 @@
     let selectedName: string = ''
     let selectedAddress: string = ''
 
-    const token = getCookieAttribute('token');
-
+    const token = window.localStorage.getItem('token')
     onMount(() => {
 
     })

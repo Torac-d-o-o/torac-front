@@ -8,7 +8,7 @@
 
     export let id: string | MixerMachines
     export let selectedOrderId: number | null
-    const token = getCookieAttribute('token')
+    const token = window.localStorage.getItem("token")
     let foundMixer: Mixer | null = null
     let productionFromOrder: Production | null = null
 

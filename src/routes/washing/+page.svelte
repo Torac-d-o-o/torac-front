@@ -6,7 +6,7 @@
     import { invoke } from "@tauri-apps/api"
     import { onMount } from "svelte"
     
-    const token = getCookieAttribute('token');
+    const token = window.localStorage.getItem("token")
     
     let enteredAt: Date | null = null
     let exitedAt: Date | null = null
